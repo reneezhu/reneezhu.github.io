@@ -2,6 +2,7 @@
 title: Trader Joe's 南瓜吐司
 description: 用 Trader Joe's 罐头南瓜泥做的软吐司，颜色金黄，带淡奶油的奶香。
 pan: 450g 吐司模
+batch: { name: 450g 吐司, unit: 条 }
 servings: 10
 unit: 片
 tags: [吐司]
