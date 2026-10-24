@@ -86,4 +86,4 @@ layout: default
 
 {{ content }}
 
-<script src="{{ '/assets/recipe.js' | relative_url }}"></script>
+<script src="{{ '/assets/recipe.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
