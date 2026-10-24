@@ -1,0 +1,66 @@
+---
+title: Style guide
+title_zh: 样式规范
+permalink: /style/
+---
+<h1>{% include t.html en="Style guide" zh="样式规范" %}</h1>
+<p>{% include t.html en="Every page and diagram on this site uses these colors only, through CSS variables. Light mode uses matching GitHub-light values." zh="网站上所有页面和图示都只用这套颜色（通过 CSS 变量）。浅色模式自动换成对应的 GitHub 浅色值。" %}</p>
+
+<h2>{% include t.html en="Palette" zh="色板" %}</h2>
+<div class="swatches">
+  {%- assign sw = "bg,panel,panel-2,border,fg,muted,accent,green,red,amber,purple" | split: "," -%}
+  {%- for s in sw %}
+  <div class="swatch"><span class="chip" style="background: var(--{{ s }})"></span><code>--{{ s }}</code></div>
+  {%- endfor %}
+</div>
+
+<h2>{% include t.html en="Diagram example" zh="图示示例" %}</h2>
+<svg class="diagram" viewBox="0 0 760 230" role="img" aria-labelledby="pipe-title">
+  <title id="pipe-title">Pretraining data pipeline</title>
+  {% include diagram-markers.html id="pipe" %}
+  <rect class="d-panel" x="1" y="1" width="758" height="228" rx="8"/>
+  <text class="d-title" x="24" y="34">Pretraining data pipeline</text>
+
+  <rect class="d-box" x="24" y="70" width="128" height="56" rx="6"/>
+  <text class="d-label" x="88" y="96" text-anchor="middle">Raw crawl</text>
+  <text class="d-small" x="88" y="114" text-anchor="middle">~100 TB</text>
+
+  <rect class="d-box accent" x="208" y="70" width="128" height="56" rx="6"/>
+  <text class="d-label" x="272" y="96" text-anchor="middle">Dedup</text>
+  <text class="d-small d-mono" x="272" y="114" text-anchor="middle">MinHash</text>
+
+  <rect class="d-box purple" x="392" y="70" width="128" height="56" rx="6"/>
+  <text class="d-label" x="456" y="96" text-anchor="middle">Quality filter</text>
+  <text class="d-small" x="456" y="114" text-anchor="middle">classifier</text>
+
+  <rect class="d-box green" x="576" y="70" width="160" height="56" rx="6"/>
+  <text class="d-label" x="656" y="96" text-anchor="middle">Training mix</text>
+  <text class="d-small" x="656" y="114" text-anchor="middle">tokenized</text>
+
+  <path class="d-line" d="M152,98 H204" marker-end="url(#pipe-arrow)"/>
+  <path class="d-line accent" d="M336,98 H388" marker-end="url(#pipe-arrow-accent)"/>
+  <path class="d-line green" d="M520,98 H572" marker-end="url(#pipe-arrow-green)"/>
+
+  <path class="d-line red dashed" d="M456,126 V176 H272 V130" marker-end="url(#pipe-arrow-red)"/>
+  <text class="d-small d-red" x="364" y="196" text-anchor="middle">rejected → re-dedup</text>
+
+  <rect class="d-panel-2" x="576" y="150" width="160" height="56" rx="6"/>
+  <text class="d-small" x="592" y="172">legend</text>
+  <text class="d-small d-amber" x="592" y="192">amber = warning</text>
+</svg>
+
+<h2>{% include t.html en="How to write a diagram" zh="写图示的规则" %}</h2>
+<ul lang="en">
+  <li>Inline the SVG with <code>class="diagram"</code> and a <code>viewBox</code>; never hard-code colors.</li>
+  <li>Text: <code>d-title</code>, <code>d-label</code>, <code>d-small</code>, <code>d-muted</code>, <code>d-mono</code>; color modifiers <code>d-accent</code> / <code>d-green</code> / <code>d-red</code> / <code>d-amber</code> / <code>d-purple</code>.</li>
+  <li>Shapes: <code>d-panel</code>, <code>d-panel-2</code>, <code>d-box</code> (+ <code>accent</code> / <code>green</code> / …). Lines: <code>d-line</code> (+ color, <code>dashed</code>).</li>
+  <li>Arrowheads: put <code>{&#37; include diagram-markers.html id="unique-name" &#37;}</code> inside the SVG, then use <code>marker-end="url(#unique-name-arrow-accent)"</code>. Every SVG on a page needs its own id.</li>
+  <li>In Markdown posts, wrap the SVG in <code>&lt;div class="figure" markdown="0"&gt;</code> so it isn't parsed as Markdown.</li>
+</ul>
+<ul lang="zh">
+  <li>内联 SVG，加 <code>class="diagram"</code> 和 <code>viewBox</code>，不要写死颜色。</li>
+  <li>文字：<code>d-title</code>、<code>d-label</code>、<code>d-small</code>、<code>d-muted</code>、<code>d-mono</code>；颜色：<code>d-accent</code> / <code>d-green</code> / <code>d-red</code> / <code>d-amber</code> / <code>d-purple</code>。</li>
+  <li>形状：<code>d-panel</code>、<code>d-panel-2</code>、<code>d-box</code>（可加 <code>accent</code> / <code>green</code> / …）。线条：<code>d-line</code>（可加颜色、<code>dashed</code>）。</li>
+  <li>箭头：在 SVG 里写 <code>{&#37; include diagram-markers.html id="唯一名" &#37;}</code>，线条用 <code>marker-end="url(#唯一名-arrow-accent)"</code>。同一页每张图的 id 都要不同。</li>
+  <li>在 Markdown 文章里，用 <code>&lt;div class="figure" markdown="0"&gt;</code> 包住 SVG，避免被当成 Markdown 解析。</li>
+</ul>
