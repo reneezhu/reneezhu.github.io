@@ -10,16 +10,24 @@ kramdown:
 
 permalink: /posts/:year/:month/:title/
 
+collections:
+  recipes:
+    output: true
+    permalink: /recipes/:name/
+
 defaults:
   - scope: { path: "" }
     values: { layout: default }
   - scope: { path: "", type: posts }
     values: { layout: post }
+  - scope: { path: "", type: recipes }
+    values: { layout: recipe }
 
 # 顶部导航，按需增删
 nav:
   - { title: 首页, url: / }
-  - { title: 文章, url: /posts/ }
+  - { title: 随笔, url: /posts/ }
+  - { title: 食谱, url: /recipes/ }
   - { title: 关于, url: /about/ }
 
 exclude:

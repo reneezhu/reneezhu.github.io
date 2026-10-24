@@ -6,7 +6,7 @@ title: 首页
 
 这里写一两句自我介绍，比如你在做什么、关注什么。
 
-## 最近文章
+## 最近随笔
 
 <ul class="post-list">
 {% for post in site.posts limit:5 %}
@@ -14,4 +14,14 @@ title: 首页
 {% endfor %}
 </ul>
 
-[查看全部 →](/posts/)
+[全部随笔 →](/posts/)
+
+## 食谱
+
+<ul class="post-list">
+{% for r in site.recipes limit:5 %}
+  <li><a href="{{ r.url | relative_url }}">{{ r.title }}</a><time>{{ r.pan }}</time></li>
+{% endfor %}
+</ul>
+
+[全部食谱 →](/recipes/)
