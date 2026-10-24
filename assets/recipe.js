@@ -41,7 +41,7 @@
     tr.innerHTML =
       '<td class="chk"><input type="checkbox" aria-label="已备好 ' + i.name + '"' + (checked[i.key] ? ' checked' : '') + '></td>' +
       '<td>' + i.name + (i.missing ? ' <span class="warn" title="原料库里没有这个原料，热量按 0 计算">⚠︎</span>' : '') + '</td>' +
-      '<td class="num g"></td><td class="num bp"></td><td class="num kcal"></td>' +
+      '<td class="num g"></td><td class="num kcal"></td>' +
       '<td class="note">' + (i.note || '') + '</td>';
     tr.querySelector('input').addEventListener('change', function (e) {
       checked[i.key] = e.target.checked;
@@ -65,19 +65,19 @@
       if (!i.flour) tot.water += g * i.water / 100; // 含水率按惯例不计面粉自身水分
       var r = rows[idx];
       r.querySelector('.g').textContent = fmtG(g) + ' g';
-      r.querySelector('.bp').textContent = flourBase ? fmt(i.g / flourBase * 100, 1) + '%' : '–';
       r.querySelector('.kcal').textContent = fmt(k) + ' kcal';
     });
     $('r-sum-g').textContent = fmt(tot.g) + ' g';
     $('r-sum-kcal').textContent = fmt(tot.kcal) + ' kcal';
     $('r-hydration').textContent = flourBase ? '实际含水率 ' + fmt(tot.water / (flourBase * m) * 100) + '%' : '';
 
-    if (src !== 'mult') $('r-mult').value = +m.toFixed(3);
+    if (src !== 'mult') $('r-mult').value = +m.toFixed(2);
     if (src !== 'total') $('r-total').value = Math.round(baseTotal * m);
     if (src !== 'base') $('r-base-g').value = fmtG(ings[state.baseIdx].g * m);
     if (src !== 'servings') $('r-servings').value = state.servings;
 
-    var n = Math.max(1, state.servings);
+    // 有 batch（如"几条 450g 吐司"）时，切片数是"每条"的，总片数随条数变化
+    var n = Math.max(1, data.batch ? state.servings * m : state.servings);
     var per = function (v) { return v / n; };
     var u = data.unit;
     $('r-stats').innerHTML =
@@ -99,7 +99,6 @@
   $('r-base-g').addEventListener('input', function () { var v = num('r-base-g'); if (v) { state.mult = v / ings[state.baseIdx].g; render('base'); } });
   sel.addEventListener('change', function () { state.baseIdx = +sel.value; render(); });
   $('r-servings').addEventListener('input', function () { var v = num('r-servings'); if (v) { state.servings = Math.round(v); render('servings'); } });
-  $('r-bp').addEventListener('change', function (e) { $('r-table').classList.toggle('show-bp', e.target.checked); });
   $('r-reset').addEventListener('click', function () {
     state.mult = 1; state.servings = data.servings; checked = {}; saveChecked();
     rows.forEach(function (r) { r.className = ''; r.querySelector('input').checked = false; });
