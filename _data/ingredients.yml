@@ -1,0 +1,37 @@
+# 原料营养库：每 100g 的数值
+# kcal 热量 / protein 蛋白质 / fat 脂肪 / carbs 碳水（含膳食纤维）/ water 含水量 (g)
+# flour: true 表示计入烘焙百分比的"面粉"基数
+# 数据主要来自 USDA FoodData Central（SR Legacy）；买的具体品牌可按包装标签改
+
+# —— 粉类 ——
+bread-flour:       { name: 高筋面粉,   kcal: 361, protein: 12.0, fat: 1.7,  carbs: 72.5, water: 13.4, flour: true }
+all-purpose-flour: { name: 中筋面粉,   kcal: 364, protein: 10.3, fat: 1.0,  carbs: 76.3, water: 11.9, flour: true }
+cake-flour:        { name: 低筋面粉,   kcal: 362, protein: 8.2,  fat: 0.9,  carbs: 78.0, water: 12.5, flour: true }
+whole-wheat-flour: { name: 全麦面粉,   kcal: 340, protein: 13.2, fat: 2.5,  carbs: 72.0, water: 10.7, flour: true }
+cocoa-powder:      { name: 无糖可可粉, kcal: 228, protein: 19.6, fat: 13.7, carbs: 57.9, water: 3.0 }
+milk-powder:       { name: 脱脂奶粉,   kcal: 362, protein: 36.2, fat: 0.8,  carbs: 52.0, water: 3.2 }
+
+# —— 液体 / 乳制品 ——
+water:             { name: 水,         kcal: 0,   protein: 0,    fat: 0,    carbs: 0,    water: 100 }
+whole-milk:        { name: 全脂牛奶,   kcal: 61,  protein: 3.2,  fat: 3.3,  carbs: 4.8,  water: 88.1 }
+heavy-cream:       { name: 淡奶油,     kcal: 340, protein: 2.8,  fat: 36.1, carbs: 2.7,  water: 57.7 }
+cream-cheese:      { name: 奶油奶酪,   kcal: 350, protein: 6.2,  fat: 34.4, carbs: 5.5,  water: 52.6 }
+greek-yogurt:      { name: 无脂希腊酸奶, kcal: 59, protein: 10.2, fat: 0.4, carbs: 3.6,  water: 85.0 }
+butter:            { name: 无盐黄油,   kcal: 717, protein: 0.9,  fat: 81.1, carbs: 0.1,  water: 17.9 }
+vegetable-oil:     { name: 植物油,     kcal: 884, protein: 0,    fat: 100,  carbs: 0,    water: 0 }
+
+# —— 蛋 ——
+egg:               { name: 全蛋液,     kcal: 143, protein: 12.6, fat: 9.5,  carbs: 0.7,  water: 76.2 }
+egg-yolk:          { name: 蛋黄,       kcal: 322, protein: 15.9, fat: 26.5, carbs: 3.6,  water: 52.3 }
+egg-white:         { name: 蛋白,       kcal: 52,  protein: 10.9, fat: 0.2,  carbs: 0.7,  water: 87.6 }
+
+# —— 糖 / 盐 / 酵母 ——
+sugar:             { name: 细砂糖,     kcal: 387, protein: 0,    fat: 0,    carbs: 100,  water: 0 }
+brown-sugar:       { name: 红糖,       kcal: 380, protein: 0.1,  fat: 0,    carbs: 98.1, water: 1.3 }
+honey:             { name: 蜂蜜,       kcal: 304, protein: 0.3,  fat: 0,    carbs: 82.4, water: 17.1 }
+salt:              { name: 盐,         kcal: 0,   protein: 0,    fat: 0,    carbs: 0,    water: 0 }
+instant-yeast:     { name: 即发干酵母, kcal: 325, protein: 40.4, fat: 7.6,  carbs: 41.2, water: 5.1 }
+baking-powder:     { name: 泡打粉,     kcal: 53,  protein: 0,    fat: 0,    carbs: 27.7, water: 5.0 }
+
+# —— 果蔬 ——
+tj-pumpkin-puree:  { name: "Trader Joe's 罐头南瓜泥", kcal: 34, protein: 1.1, fat: 0.3, carbs: 8.1, water: 90.0 }
