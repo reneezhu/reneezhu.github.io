@@ -1,0 +1,13 @@
+{%- comment -%}
+  为一张 SVG 生成箭头 marker。id 必须在页面内唯一（每张图用不同的名字），避免 id 冲突。
+  用法：include diagram-markers.html id="pipeline"（放在 svg 里面）
+  然后：<path class="d-line accent" marker-end="url(#pipeline-arrow-accent)" …/>
+  可用：#<id>-arrow（灰）、-arrow-accent、-arrow-green、-arrow-red、-arrow-amber、-arrow-purple
+{%- endcomment -%}
+<defs>
+  <marker id="{{ include.id }}-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head" d="M0,0 L10,5 L0,10 z"/></marker>
+  {%- assign colors = "accent,green,red,amber,purple" | split: "," -%}
+  {%- for c in colors %}
+  <marker id="{{ include.id }}-arrow-{{ c }}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-head {{ c }}" d="M0,0 L10,5 L0,10 z"/></marker>
+  {%- endfor %}
+</defs>
