@@ -51,13 +51,19 @@ body {
 .site-header nav a:hover { background: var(--hover); color: var(--fg); }
 .site-header nav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
 
-#theme-toggle {
+/* 语言：只显示当前语言的内容 */
+:root[data-lang="en"] [lang="zh"],
+:root[data-lang="zh"] [lang="en"] { display: none !important; }
+
+.icon-btn {
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; margin-left: 4px;
   border: 1px solid var(--border); border-radius: 6px;
   background: transparent; color: var(--muted); cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 600;
 }
-#theme-toggle:hover { background: var(--hover); color: var(--fg); }
+.icon-btn:hover { background: var(--hover); color: var(--fg); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .icon-moon { display: none; }
 :root[data-theme="dark"] .icon-sun { display: none; }
 :root[data-theme="dark"] .icon-moon { display: inline; }
@@ -133,8 +139,6 @@ body {
 .recipe-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .recipe-table .note { color: var(--muted); font-size: 13px; }
 .recipe-table .chk { width: 28px; text-align: center; }
-.recipe-table .bp { display: none; }
-.recipe-table.show-bp .bp { display: table-cell; }
 .recipe-table tr.done td:not(.chk) { opacity: .45; text-decoration: line-through; }
 .recipe-table tfoot td { font-weight: 600; }
 .recipe-table tfoot #r-hydration { font-weight: 400; color: var(--muted); font-size: 13px; }
