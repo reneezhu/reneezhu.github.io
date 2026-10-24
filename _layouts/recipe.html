@@ -5,12 +5,18 @@ layout: default
 {%- assign unit = page.unit | default: "份" -%}
 <h1>{{ page.title }}</h1>
 {% if page.description %}<p class="recipe-desc">{{ page.description }}</p>{% endif %}
-<p class="post-meta">{% if page.pan %}{{ page.pan }} · {% endif %}原方 {{ page.servings }} {{ unit }}{% if page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}</p>
+<p class="post-meta">{% if page.pan %}{{ page.pan }} · {% endif %}{% if page.batch %}每{{ page.batch.unit }} {% else %}原方 {% endif %}{{ page.servings }} {{ unit }}{% if page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}</p>
 
 <div class="recipe-controls" id="r-controls">
+  {%- if page.batch %}
+  <label>做
+    <input type="number" id="r-mult" step="0.5" min="0.1" value="1" inputmode="decimal"> {{ page.batch.unit }} {{ page.batch.name }}
+  </label>
+  {%- else %}
   <label>倍数
     <input type="number" id="r-mult" step="0.05" min="0.05" value="1" inputmode="decimal">
   </label>
+  {%- endif %}
   <label>面团总重 <span class="unit">g</span>
     <input type="number" id="r-total" step="1" min="1" inputmode="numeric">
   </label>
@@ -18,11 +24,10 @@ layout: default
     <select id="r-base"></select> 为准
     <input type="number" id="r-base-g" step="1" min="1" inputmode="numeric"><span class="unit">g</span>
   </label>
-  <label>切成
+  <label>{% if page.batch %}每{{ page.batch.unit }}{% endif %}切成
     <input type="number" id="r-servings" step="1" min="1" value="{{ page.servings }}" inputmode="numeric"> {{ unit }}
   </label>
   <div class="recipe-toggles">
-    <label class="check"><input type="checkbox" id="r-bp"> 烘焙百分比</label>
     <button type="button" id="r-reset">重置</button>
   </div>
 </div>
@@ -31,18 +36,18 @@ layout: default
 
 <table class="recipe-table" id="r-table">
   <thead>
-    <tr><th class="chk" aria-label="已备好"></th><th>材料</th><th class="num">用量</th><th class="num bp">烘焙%</th><th class="num">热量</th><th>备注</th></tr>
+    <tr><th class="chk" aria-label="已备好"></th><th>材料</th><th class="num">用量</th><th class="num">热量</th><th>备注</th></tr>
   </thead>
   <tbody id="r-body"></tbody>
   <tfoot>
-    <tr><td></td><td>合计</td><td class="num" id="r-sum-g"></td><td class="num bp"></td><td class="num" id="r-sum-kcal"></td><td id="r-hydration"></td></tr>
+    <tr><td></td><td>合计</td><td class="num" id="r-sum-g"></td><td class="num" id="r-sum-kcal"></td><td id="r-hydration"></td></tr>
   </tfoot>
 </table>
 
 <p class="recipe-note">热量按原料加总估算（每 100g 数据主要来自 USDA FoodData Central），不考虑烘烤失水，仅供参考。勾选框可以在备料时打勾，刷新后仍保留。</p>
 
 <script id="recipe-data" type="application/json">
-{"servings": {{ page.servings | default: 1 }}, "unit": {{ unit | jsonify }}, "ingredients": [
+{"servings": {{ page.servings | default: 1 }}, "batch": {% if page.batch %}true{% else %}false{% endif %}, "unit": {{ unit | jsonify }}, "ingredients": [
 {%- for ing in page.ingredients -%}
 {%- assign d = db[ing.item] -%}
 {"key": {{ ing.item | jsonify }}, "name": {{ d.name | default: ing.item | jsonify }}, "g": {{ ing.g }}, "note": {{ ing.note | default: "" | jsonify }}, "missing": {% if d %}false{% else %}true{% endif %}, "flour": {% if d.flour %}true{% else %}false{% endif %}, "kcal": {{ d.kcal | default: 0 }}, "protein": {{ d.protein | default: 0 }}, "fat": {{ d.fat | default: 0 }}, "carbs": {{ d.carbs | default: 0 }}, "water": {{ d.water | default: 0 }}}{% unless forloop.last %},{% endunless %}
