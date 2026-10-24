@@ -1,6 +1,6 @@
 title: Renee
-description: 个人网站
-lang: zh-CN
+description: Renee's notes on tech and baking
+lang: en
 author: Renee
 
 markdown: kramdown
@@ -25,10 +25,10 @@ defaults:
 
 # 顶部导航，按需增删
 nav:
-  - { title: 首页, url: / }
-  - { title: 随笔, url: /posts/ }
-  - { title: 食谱, url: /recipes/ }
-  - { title: 关于, url: /about/ }
+  - { title: Home,    title_zh: 首页, url: / }
+  - { title: Posts,   title_zh: 随笔, url: /posts/ }
+  - { title: Recipes, title_zh: 食谱, url: /recipes/ }
+  - { title: About,   title_zh: 关于, url: /about/ }
 
 exclude:
   - README.md

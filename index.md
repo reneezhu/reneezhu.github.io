@@ -1,27 +1,39 @@
 ---
-title: 首页
+title: Home
+title_zh: 首页
 ---
+
+<div lang="en" markdown="1">
+
+# Hi, I'm Renee 👋
+
+A short intro goes here — what you work on and what you're into.
+
+</div>
+<div lang="zh" markdown="1">
 
 # 你好，我是 Renee 👋
 
 这里写一两句自我介绍，比如你在做什么、关注什么。
 
-## 最近随笔
+</div>
+
+## {% include t.html en="Recent posts" zh="最近随笔" %}
 
 <ul class="post-list">
 {% for post in site.posts limit:5 %}
-  <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a><time>{{ post.date | date: "%Y-%m-%d" }}</time></li>
+  <li><a href="{{ post.url | relative_url }}">{% include t.html en=post.title zh=post.title_zh %}</a><time>{{ post.date | date: "%Y-%m-%d" }}</time></li>
 {% endfor %}
 </ul>
 
-[全部随笔 →](/posts/)
+<p><a href="{{ '/posts/' | relative_url }}">{% include t.html en="All posts →" zh="全部随笔 →" %}</a></p>
 
-## 食谱
+## {% include t.html en="Recipes" zh="食谱" %}
 
 <ul class="post-list">
 {% for r in site.recipes limit:5 %}
-  <li><a href="{{ r.url | relative_url }}">{{ r.title }}</a><time>{{ r.pan }}</time></li>
+  <li><a href="{{ r.url | relative_url }}">{% include t.html en=r.title zh=r.title_zh %}</a><time>{% include t.html en=r.pan_en zh=r.pan %}</time></li>
 {% endfor %}
 </ul>
 
-[全部食谱 →](/recipes/)
+<p><a href="{{ '/recipes/' | relative_url }}">{% include t.html en="All recipes →" zh="全部食谱 →" %}</a></p>

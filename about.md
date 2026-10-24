@@ -1,7 +1,22 @@
 ---
-title: 关于
+title: About
+title_zh: 关于
 permalink: /about/
 ---
+
+<div lang="en" markdown="1">
+
+# About me
+
+A longer introduction goes here.
+
+## Contact
+
+- GitHub: [@reneezhu](https://github.com/reneezhu)
+- Email: you@example.com
+
+</div>
+<div lang="zh" markdown="1">
 
 # 关于我
 
@@ -11,3 +26,5 @@ permalink: /about/
 
 - GitHub: [@reneezhu](https://github.com/reneezhu)
 - Email: you@example.com
+
+</div>
