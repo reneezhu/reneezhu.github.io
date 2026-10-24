@@ -1,10 +1,10 @@
 ---
 layout: default
 ---
-<h1>{{ page.title }}</h1>
+<h1>{% include t.html en=page.title zh=page.title_zh %}</h1>
 <p class="post-meta">{{ page.date | date: "%Y-%m-%d" }}{% if page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}</p>
 
 {{ content }}
 
 <hr>
-<p><a href="{{ '/posts/' | relative_url }}">← 所有文章</a></p>
+<p><a href="{{ '/posts/' | relative_url }}">← {% include t.html en="All posts" zh="所有随笔" %}</a></p>

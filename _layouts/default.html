@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: 'zh-CN' }}">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ page.description | default: page.excerpt | strip_html | strip_newlines | truncate: 160 | default: site.description }}">
+  {%- assign title_en = page.title -%}
+  {%- assign title_zh = page.title_zh | default: page.title -%}
+  <title>{% if page.title and page.url != "/" %}{{ title_en }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
 
   <!-- GitHub Markdown 样式：默认跟随系统 dark / light -->
   <link id="css-light" rel="stylesheet" media="(prefers-color-scheme: light)"
@@ -14,7 +16,7 @@
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
 
   <script>
-    // 在页面渲染前应用已保存的主题，避免闪烁
+    // 主题：在渲染前应用，避免闪烁
     function applyTheme(t) {
       var l = document.getElementById('css-light'), d = document.getElementById('css-dark');
       if (t === 'light')      { l.media = 'all';     d.media = 'not all'; }
@@ -24,6 +26,24 @@
       else document.documentElement.removeAttribute('data-theme');
     }
     try { applyTheme(localStorage.getItem('theme')); } catch (e) {}
+
+    // 语言：默认英文，可切换中文
+    var PAGE_TITLES = {
+      en: {{ title_en | default: "" | jsonify }},
+      zh: {{ title_zh | default: "" | jsonify }},
+      site: {{ site.title | jsonify }},
+      home: {% if page.url == "/" %}true{% else %}false{% endif %}
+    };
+    function getLang() { return document.documentElement.getAttribute('data-lang') || 'en'; }
+    function applyLang(l) {
+      l = l === 'zh' ? 'zh' : 'en';
+      var root = document.documentElement;
+      root.setAttribute('data-lang', l);
+      root.setAttribute('lang', l === 'zh' ? 'zh-CN' : 'en');
+      if (!PAGE_TITLES.home && PAGE_TITLES[l]) document.title = PAGE_TITLES[l] + ' · ' + PAGE_TITLES.site;
+      document.dispatchEvent(new CustomEvent('langchange', { detail: l }));
+    }
+    try { applyLang(localStorage.getItem('lang') || 'en'); } catch (e) { applyLang('en'); }
   </script>
 </head>
 <body>
@@ -31,9 +51,12 @@
     <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
     <nav>
       {% for item in site.nav %}
-        <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a>
+        <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{% include t.html en=item.title zh=item.title_zh %}</a>
       {% endfor %}
-      <button id="theme-toggle" type="button" aria-label="切换深色/浅色模式" title="切换深色/浅色模式">
+      <button id="lang-toggle" class="icon-btn" type="button" aria-label="Switch language / 切换语言" title="Switch language / 切换语言">
+        <span lang="en">中</span><span lang="zh">EN</span>
+      </button>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
         <svg class="icon-sun" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-1.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.061l-1.061 1.06a.749.749 0 0 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm13 0a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8Zm-8 5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Zm3.536-1.464a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061ZM2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.061a.751.751 0 0 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06Z"/></svg>
         <svg class="icon-moon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.046-7.046.75.75 0 0 1 .175-.786Zm1.616 1.945a7 7 0 0 1-7.678 7.678 5.499 5.499 0 1 0 7.678-7.678Z"/></svg>
       </button>
@@ -55,6 +78,11 @@
       var next = cur === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+    document.getElementById('lang-toggle').addEventListener('click', function () {
+      var next = getLang() === 'zh' ? 'en' : 'zh';
+      applyLang(next);
+      try { localStorage.setItem('lang', next); } catch (e) {}
     });
   </script>
 </body>

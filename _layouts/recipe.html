@@ -2,33 +2,47 @@
 layout: default
 ---
 {%- assign db = site.data.ingredients -%}
-{%- assign unit = page.unit | default: "份" -%}
-<h1>{{ page.title }}</h1>
-{% if page.description %}<p class="recipe-desc">{{ page.description }}</p>{% endif %}
-<p class="post-meta">{% if page.pan %}{{ page.pan }} · {% endif %}{% if page.batch %}每{{ page.batch.unit }} {% else %}原方 {% endif %}{{ page.servings }} {{ unit }}{% if page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}</p>
+{%- assign unit_zh = page.unit | default: "份" -%}
+{%- assign unit_en = page.unit_en | default: "serving" -%}
+<h1>{% include t.html en=page.title zh=page.title_zh %}</h1>
+{% if page.description %}<p class="recipe-desc">{% include t.html en=page.description zh=page.description_zh %}</p>{% endif %}
+<p class="post-meta">
+  {%- if page.pan %}{% include t.html en=page.pan_en zh=page.pan %} · {% endif -%}
+  {%- if page.batch -%}
+    <span lang="en">{{ page.servings }} {{ unit_en }}s per {{ page.batch.unit_en }}</span><span lang="zh">每{{ page.batch.unit }} {{ page.servings }} {{ unit_zh }}</span>
+  {%- else -%}
+    <span lang="en">Makes {{ page.servings }} {{ unit_en }}s</span><span lang="zh">原方 {{ page.servings }} {{ unit_zh }}</span>
+  {%- endif -%}
+</p>
 
 <div class="recipe-controls" id="r-controls">
   {%- if page.batch %}
-  <label>做
-    <input type="number" id="r-mult" step="0.5" min="0.1" value="1" inputmode="decimal"> {{ page.batch.unit }} {{ page.batch.name }}
+  <label><span lang="en">Make</span><span lang="zh">做</span>
+    <input type="number" id="r-mult" step="0.5" min="0.1" value="1" inputmode="decimal">
+    <span lang="en">× {{ page.batch.name_en }}</span><span lang="zh">{{ page.batch.unit }} {{ page.batch.name }}</span>
   </label>
   {%- else %}
-  <label>倍数
+  <label>{% include t.html en="Scale ×" zh="倍数" %}
     <input type="number" id="r-mult" step="0.05" min="0.05" value="1" inputmode="decimal">
   </label>
   {%- endif %}
-  <label>面团总重 <span class="unit">g</span>
+  <label>{% include t.html en="Dough weight" zh="面团总重" %} <span class="unit">g</span>
     <input type="number" id="r-total" step="1" min="1" inputmode="numeric">
   </label>
-  <label class="wide">以
-    <select id="r-base"></select> 为准
+  <label class="wide"><span lang="en">Scale to</span><span lang="zh">以</span>
+    <select id="r-base"></select><span lang="zh">为准</span>
     <input type="number" id="r-base-g" step="1" min="1" inputmode="numeric"><span class="unit">g</span>
   </label>
-  <label>{% if page.batch %}每{{ page.batch.unit }}{% endif %}切成
-    <input type="number" id="r-servings" step="1" min="1" value="{{ page.servings }}" inputmode="numeric"> {{ unit }}
+  <label>
+    {%- if page.batch -%}
+      <span lang="en">{{ unit_en | capitalize }}s per {{ page.batch.unit_en }}</span><span lang="zh">每{{ page.batch.unit }}切成</span>
+    {%- else -%}
+      <span lang="en">{{ unit_en | capitalize }}s</span><span lang="zh">分成</span>
+    {%- endif %}
+    <input type="number" id="r-servings" step="1" min="1" value="{{ page.servings }}" inputmode="numeric"><span lang="zh">{{ unit_zh }}</span>
   </label>
   <div class="recipe-toggles">
-    <button type="button" id="r-reset">重置</button>
+    <button type="button" id="r-reset">{% include t.html en="Reset" zh="重置" %}</button>
   </div>
 </div>
 
@@ -36,21 +50,36 @@ layout: default
 
 <table class="recipe-table" id="r-table">
   <thead>
-    <tr><th class="chk" aria-label="已备好"></th><th>材料</th><th class="num">用量</th><th class="num">热量</th><th>备注</th></tr>
+    <tr>
+      <th class="chk"></th>
+      <th>{% include t.html en="Ingredient" zh="材料" %}</th>
+      <th class="num">{% include t.html en="Amount" zh="用量" %}</th>
+      <th class="num">{% include t.html en="Calories" zh="热量" %}</th>
+      <th>{% include t.html en="Notes" zh="备注" %}</th>
+    </tr>
   </thead>
   <tbody id="r-body"></tbody>
   <tfoot>
-    <tr><td></td><td>合计</td><td class="num" id="r-sum-g"></td><td class="num" id="r-sum-kcal"></td><td id="r-hydration"></td></tr>
+    <tr><td></td><td>{% include t.html en="Total" zh="合计" %}</td><td class="num" id="r-sum-g"></td><td class="num" id="r-sum-kcal"></td><td id="r-hydration"></td></tr>
   </tfoot>
 </table>
 
-<p class="recipe-note">热量按原料加总估算（每 100g 数据主要来自 USDA FoodData Central），不考虑烘烤失水，仅供参考。勾选框可以在备料时打勾，刷新后仍保留。</p>
+<p class="recipe-note">
+  <span lang="en">Calories are estimated by summing raw ingredients (per-100g data mostly from USDA FoodData Central) and ignore moisture lost in baking. Tick the boxes as you prep — they're remembered on this device.</span>
+  <span lang="zh">热量按原料加总估算（每 100g 数据主要来自 USDA FoodData Central），不考虑烘烤失水，仅供参考。勾选框可以在备料时打勾，刷新后仍保留。</span>
+</p>
 
 <script id="recipe-data" type="application/json">
-{"servings": {{ page.servings | default: 1 }}, "batch": {% if page.batch %}true{% else %}false{% endif %}, "unit": {{ unit | jsonify }}, "ingredients": [
+{"servings": {{ page.servings | default: 1 }}, "batch": {% if page.batch %}true{% else %}false{% endif %},
+ "unit": {"en": {{ unit_en | jsonify }}, "zh": {{ unit_zh | jsonify }}},
+ "ingredients": [
 {%- for ing in page.ingredients -%}
 {%- assign d = db[ing.item] -%}
-{"key": {{ ing.item | jsonify }}, "name": {{ d.name | default: ing.item | jsonify }}, "g": {{ ing.g }}, "note": {{ ing.note | default: "" | jsonify }}, "missing": {% if d %}false{% else %}true{% endif %}, "flour": {% if d.flour %}true{% else %}false{% endif %}, "kcal": {{ d.kcal | default: 0 }}, "protein": {{ d.protein | default: 0 }}, "fat": {{ d.fat | default: 0 }}, "carbs": {{ d.carbs | default: 0 }}, "water": {{ d.water | default: 0 }}}{% unless forloop.last %},{% endunless %}
+{"key": {{ ing.item | jsonify }},
+ "name": {"en": {{ d.en | default: ing.item | jsonify }}, "zh": {{ d.name | default: ing.item | jsonify }}},
+ "note": {"en": {{ ing.note_en | default: ing.note | default: "" | jsonify }}, "zh": {{ ing.note | default: "" | jsonify }}},
+ "g": {{ ing.g }}, "missing": {% if d %}false{% else %}true{% endif %}, "flour": {% if d.flour %}true{% else %}false{% endif %},
+ "kcal": {{ d.kcal | default: 0 }}, "protein": {{ d.protein | default: 0 }}, "fat": {{ d.fat | default: 0 }}, "carbs": {{ d.carbs | default: 0 }}, "water": {{ d.water | default: 0 }}}{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ]}
 </script>
